@@ -71,13 +71,13 @@ def extract_infos(pcap_file, label):
     
     pkts = rdpcap(pcap_file) # lê os pacotes do arquivo .pcap
 
-    total_tcp = count_icmp_pkts(pkts)
+    total_icmp = count_icmp_pkts(pkts)
     ip_src, ip_dest = get_ips(pkts)
     throuput = calculate_throughput(pkts)
     mean_interval = interval_between_pkts(pkts)
 
-    print("Total of icmp packets is: ", total_tcp)
-    print(f"ip origem é: {ip_src}, ip destino é: {ip_dest}")
+    print(f"número total de pacotes ICMP é: {total_icmp}")
+    print(f"IP origem é: {ip_src}, IP destino é: {ip_dest}")
     print(f"Throughput médio é: {throuput:.4f} bytes/segundo")
     print(f"O tempo médio entre pacotes é: {mean_interval:.6f} segundos")
     generate_graphs(pkts, label)
