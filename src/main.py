@@ -7,11 +7,13 @@ nest_asyncio.apply()
 
 # função pra pegar o ip do host fonte pro host destino
 def get_ips(pkts):
+    pkts = [pkt for pkt in pkts if ICMP in pkt]
     ip_src, ip_dest = pkts[0][IP].src, pkts[0][IP].dst
     return ip_src, ip_dest
 
 # função para calcular o throughput médio
 def calculate_throughput(pkts):
+    pkts = [pkt for pkt in pkts if ICMP in pkt]
     total = sum(len(pkt) for pkt in pkts) # número total de bytes
     dur = pkts[-1].time - pkts[0].time  # duração da transmissão
     throughput = total/ dur # throughput médio
@@ -19,17 +21,19 @@ def calculate_throughput(pkts):
 
 # função para calcular o tempo médio entre cada pacote
 def interval_between_pkts(pkts):
+    pkts = [pkt for pkt in pkts if ICMP in pkt]
     time_diff = np.diff([pkt.time for pkt in pkts])
     mean_interval = np.mean(time_diff.astype(float))
     return mean_interval
 
 # função para contar a quantidade de pacotes ICMP
 def count_icmp_pkts(pkts):
-    tcp_pkts = [pkt for pkt in pkts if ICMP in pkt]
-    return len(tcp_pkts)
+    icmp_pkts = [pkt for pkt in pkts if ICMP in pkt]
+    return len(icmp_pkts)
 
 # função que gera gráficos para uma captura
 def generate_graphs(pkts, label):
+    pkts = [pkt for pkt in pkts if ICMP in pkt]
     idx = np.arange(1, len(pkts) + 1)
     sizes = np.array([len(pkt) for pkt in pkts]) # tamanho dos pacotes
     times = np.array([pkt.time for pkt in pkts]) # tempo de chegada de cada pacotes
@@ -85,8 +89,8 @@ def extract_infos(pcap_file, label):
 
 
 if __name__ == "__main__":
-    pcap_file_h1 = "../pcap-data/pcap-h1.pcap"
-    pcap_file_h2 = "../pcap-data/pcap-h2.pcap"
+    pcap_file_h1 = "../pcap-data/h1-h3.pcap"
+    pcap_file_h2 = "../pcap-data/h2-h4.pcap"
 
     extract_infos(pcap_file_h1, "h1->h3")
     extract_infos(pcap_file_h2, "h2->h4")
